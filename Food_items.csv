@@ -1,0 +1,36 @@
+item_name,price,Category,Code
+Chilli Cheese Toast,315,veg,CCT
+Tandoori Soya Chaap Wrap,346.5,veg,TSCW
+Pesto Veggie Sourdough Sandwich,420,veg,PVSS
+Sriracha Chicken Sourdough Sandwich,430.5,non-veg,SCSS
+Mushroom Cheese Melt Multigrain Sandwich,462,veg,MCMMS
+Roast Chicken Multigrain Sandwich,467.25,non-veg,RCMS
+Basil Tomato Mozzarella Cheese Sandwich,372.75,veg,BTMCS
+Spinach & Corn Sandwich,257.25,veg,SCS
+Chicken Salad Sandwich,257.25,non-veg,CSS
+Paneer Tikka Sandwich,267.75,veg,PTS
+Chilli Paneer Sandwich,273,veg,CPD
+Lebanese Chicken Sandwich,278.25,non-veg,LCS
+Egg & Mayo Sandwich,204.75,non-veg,EMS
+Three Dip Chips,267.75,veg,TDC
+Egg White and Chicken In Multigrain Croissant,367.5,non-veg,EWCIMC
+Cranberry Pinwheel,378,veg,CPW
+Vanilla Ice Cream Croissant,378,veg,VICC
+Chicken Tikka Flatbread,252,non-veg,CTB
+Asian Veg Bowl,388.5,veg,AVB
+Almond Butterscotch Cookie,278.25,veg,ABC
+Strawberry and Almond Cake,388.5,veg,SAC
+Red Velvet & Orange Cake,399,veg,RVOC
+Pumpkin Spiced Pastry,168,veg,PSP
+Banana Chocolate Loaf Cake,315,veg,BCLC
+Blueberry Muffin,315,veg,BBM
+Double Chocolate Chip Cookie,246.75,veg,DCCC
+Lemon Loaf Cake,315,veg,LLC
+New York Cheesecake,404.25,veg,NYC
+Bhuna Chicken Puff,204.75,non-veg,BCP
+Masala Potato Puff,168,veg,MPP
+Chilly Chicken In English Muffin,294,non-veg,CCIEM
+Bhopali Chicken Korma Wrap,393.75,non-veg,BCKW
+Classic Cinnamon Swirl,231,veg,CCS
+Baked Veggie Bagel,283.5,veg,BVB
+Chocolate Silk Pastry,330.75,veg,CSP

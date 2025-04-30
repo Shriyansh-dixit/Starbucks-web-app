@@ -1,0 +1,39 @@
+item_name,Price,Code,Category
+Latte,204.75,LT,veg
+Crunchy Red Hat Mocha Latte,414.75,CRHML,veg
+Iced Crunchy Red Hat Mocha Latte,456.75,ICRHML,veg
+Toffee Nut Crunch Latte,414.75,TNCL,veg
+Iced Toffee Nut Crunch Latte,456.75,ITCNL,veg
+Gingerbread Latte,414.75,GL,veg
+Iced Gingerbread Latte,456.75,IGL,veg
+Vienna Creamy Latte,414.75,VICL,veg
+Iced Vienna Creamy Latte,456.75,IVCL,veg
+Classic Iced Coffee,236.25,CIC,veg
+Salted Pretzel Caramel Latte,414.75,SPCL,veg
+Iced Salted Pretzel Caramel Latte,456.75,ISPCL,veg
+Honey Almond Flat White,399,HAFW,veg
+Honey Oat Flat White,399,HOFW,veg
+Blonde Almond Latte,388.5,BAL,veg
+Blonde Jaggery Oat Latte,388.5,BJOL,veg
+Hazelnut Oat Cortado,388.5,HOC,veg
+Creme Brulee Latte,414.75,CBL,veg
+Iced Creme Brulee Latte,456.75,ICBL,veg
+Caffe Americano,220.5,CA,veg
+Mocha,299.25,MC,veg
+Caramel Macchiato,325.5,CM,veg
+Chocolate Cappuccino,309.75,CC,veg
+Flat White,257.25,FW,veg
+Americano,257.25,AM,veg
+Iced caffe latte,267.75,ICL,veg
+Mocha,336,MOM,veg
+Iced Cappuccino,262.5,IC,veg
+Iced Chocolate Cappuccino,346.5,ICC,veg
+Iced Velvet Vanilla Latte,367.5,IVVL,veg
+Iced White Mocha,341.25,IWM,veg
+Velvet Vanilla Latte,330.75,VVL,veg
+White Chocolate Mocha,304.5,WCM,veg
+Vanilla Caffe Latte,288.75,VACL,veg
+Iced Vanilla Latte,325.5,IVL,veg
+Iced Hazelnut Latte,325.5,IHL,veg
+Hazelnut Caffe Latte,288.75,HCL,veg
+Cappuccino,199.5,CP,veg

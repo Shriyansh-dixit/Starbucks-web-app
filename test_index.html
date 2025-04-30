@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starbucks - Order Entry</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png" alt="Starbucks Logo" class="logo">
+
+    <div class="container">
+        <h1 class="restaurant-name">Starbucks</h1>
+        <h2 class="order-heading">☕ Order Entry</h2>
+
+        <div class="main-content">
+            <div class="form-column">
+                <form method="POST" action="/" class="order-form" id="orderForm">
+                    <select name="category" id="category" class="category-select" onchange="updateSuggestions()">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat }}">{{ cat | capitalize | replace('_', ' ') }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="order-input-section">
+                        <input type="text" id="serial_code" placeholder="Enter Serial Code (e.g., CPL)" onkeyup="fetchSuggestions()">
+                        <div id="suggestions" class="suggestions"></div>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn minus" onclick="changeQuantity(-1)">-</button>
+                            <span id="quantity">1</span>
+                            <button type="button" class="quantity-btn plus" onclick="changeQuantity(1)">+</button>
+                        </div>
+                        <button type="button" class="add-item-btn" onclick="addItem()">Add Item</button>
+                    </div>
+                    <div id="added-items" class="added-items"></div>
+                    <button type="submit" class="submit-btn">Submit Order</button>
+                </form>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <p class="flash {{ category }}">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <p class="power-bi-text">View your orders in Power BI Desktop!</p>
+            </div>
+
+            <div class="orders-column">
+                <div class="orders-filter">
+                    <input type="date" id="date-filter" value="{{ selected_date }}" onchange="filterOrders()">
+                    <button onclick="downloadPDF()" class="pdf-btn">Download PDF</button>
+                </div>
+                <h2 class="orders-title">Last 10 Orders ({{ selected_date }})</h2>
+                <div class="slider" id="orders-slider">
+                    <div class="slider-track" id="orders-track">
+                        {% if recent_orders %}
+                            {% set grouped_orders = recent_orders | groupby('group_id') %}
+                            {% for group_id, orders in grouped_orders %}
+                                <div class="order-group">
+                                    <p><strong>Order at:</strong> {{ orders[0].order_date }} {{ orders[0].order_time }} (Group: {{ group_id | default(0) }})</p>
+                                    {% for order in orders %}
+                                        <div class="order-item">
+                                            <p><strong>ID:</strong> {{ order.id }}</p>
+                                            <p><strong>Serial:</strong> {{ order.serial_code }}</p>
+                                            <p><strong>Name:</strong> {{ order.item_name }}</p>
+                                            <p><strong>Price:</strong> ${{ order.price }}</p>
+                                            <p><strong>Type:</strong> {{ order.item_type }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="no-orders">No orders yet for {{ selected_date }}.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Developed by Shriyansh</p>
+    </footer>
+
+    <script>
+        let items = [];
+
+        function fetchSuggestions() {
+            const query = document.getElementById('serial_code').value;
+            const category = document.getElementById('category').value;
+            const suggestionsDiv = document.getElementById('suggestions');
+            
+            if (query.length > 0) {
+                fetch(`/api/suggestions?q=${query}&category=${category}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestionsDiv.innerHTML = '';
+                        suggestionsDiv.style.display = 'block';
+                        if (data.length > 0) {
+                            const ul = document.createElement('ul');
+                            data.forEach(item => {
+                                const li = document.createElement('li');
+                                li.textContent = `${item.serial_code} - ${item.item_name}`;
+                                li.onclick = () => {
+                                    document.getElementById('serial_code').value = item.serial_code;
+                                    suggestionsDiv.style.display = 'none';
+                                };
+                                ul.appendChild(li);
+                            });
+                            suggestionsDiv.appendChild(ul);
+                        }
+                    });
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+        }
+
+        function updateSuggestions() {
+            fetchSuggestions();
+        }
+
+        function changeQuantity(delta) {
+            const quantitySpan = document.getElementById('quantity');
+            let quantity = parseInt(quantitySpan.textContent);
+            quantity = Math.max(1, quantity + delta);
+            quantitySpan.textContent = quantity;
+        }
+
+        function addItem() {
+            const serialCode = document.getElementById('serial_code').value;
+            const quantity = parseInt(document.getElementById('quantity').textContent);
+            if (!serialCode) {
+                alert("Please enter a serial code!");
+                return;
+            }
+
+            fetch(`/api/suggestions?q=${serialCode}&category=${document.getElementById('category').value}`)
+                .then(response => response.json())
+                .then(data => {
+                    const item = data.find(i => i.serial_code === serialCode);
+                    if (item) {
+                        items.push({ serial_code: serialCode, quantity: quantity });
+                        renderItems();
+                        document.getElementById('serial_code').value = '';
+                        document.getElementById('quantity').textContent = '1';
+                        document.getElementById('suggestions').style.display = 'none';
+                    } else {
+                        alert("Invalid serial code!");
+                    }
+                });
+        }
+
+        function renderItems() {
+            const addedItemsDiv = document.getElementById('added-items');
+            addedItemsDiv.innerHTML = '';
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'added-item';
+                div.innerHTML = `
+                    <span>${item.serial_code} - Quantity: </span>
+                    <div class="quantity-selector">
+                        <button type="button" class="quantity-btn minus" onclick="updateItemQuantity(${index}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button type="button" class="quantity-btn plus" onclick="updateItemQuantity(${index}, 1)">+</button>
+                    </div>
+                    <button type="button" class="remove-btn" onclick="removeItem(${index})">Remove</button>
+                `;
+                addedItemsDiv.appendChild(div);
+            });
+            const form = document.getElementById('orderForm');
+            form.querySelectorAll('input[name="items[]"]').forEach(input => input.remove());
+            items.forEach(item => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'items[]';
+                input.value = `${item.serial_code}:${item.quantity}`;
+                form.appendChild(input);
+            });
+        }
+
+        function updateItemQuantity(index, delta) {
+            items[index].quantity = Math.max(1, items[index].quantity + delta);
+            renderItems();
+        }
+
+        function removeItem(index) {
+            items.splice(index, 1);
+            renderItems();
+        }
+
+        function filterOrders() {
+            const date = document.getElementById('date-filter').value;
+            if (date) {
+                window.location.href = `/?date=${date}`;
+            }
+        }
+
+        function downloadPDF() {
+            const date = document.getElementById('date-filter').value;
+            if (date) {
+                window.location.href = `/api/download_orders_pdf?date=${date}`;
+            } else {
+                alert("Please select a date first!");
+            }
+        }
+    </script>
+</body>
+</html>
